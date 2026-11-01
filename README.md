@@ -4,7 +4,7 @@ Standalone review project for three experiences: Business Web, Customer App, Sal
 
 - Every customer, product record, transaction and operational figure is fictional.
 - No data, credentials, endpoint calls or storage bindings from X-Booster.
-- Test login: username `cmc-test`, password supplied separately. No OpenAI sign-in. This browser-only gate is intentionally for synthetic UI testing; static files remain downloadable and session flags can be bypassed. Do not use real data. For production, use server-side authentication.
+- Test login: username `cmc-test 01`, password supplied separately. No OpenAI sign-in. This browser-only gate is intentionally for synthetic UI testing; static files remain downloadable and session flags can be bypassed. Do not use real data. For production, use server-side authentication.
 - Static frontend. Sample interactions and feedback persist only in this browser's localStorage.
 - Uploaded images stay as in-memory blob URLs and are never uploaded. Drafts exclude images.
 - Review feedback can be exported as JSON. No automatic sending or collaboration sync.
@@ -56,7 +56,7 @@ Image upload/drop supports JPG/PNG up to 5 MB as a reference preview. It does no
 - Import kho đọc XLSX/XLS/CSV tại trình duyệt bằng SheetJS CE 0.20.3 (bundle local, https://sheetjs.com). Chọn sheet, ghép cột và xem trước; toàn bộ lỗi phải được sửa trước khi ghi. File tối đa 5 MB / 2.000 dòng; công thức cần chuyển thành giá trị. Dữ liệu khác hệ thống cần xuất ra một trong các định dạng này; chưa có kết nối API kho ngoài.
 - Khóa cập nhật tồn: SKU + nhà máy + location + lô + sắc độ + phẩm cấp. Ghi số dư tuyệt đối, không cộng dồn; nhập lại cùng file cập nhật đúng lô. Danh mục SKU không tự tạo từ file. Tồn nhập được sử dụng trong kiểm tra tồn đơn hàng.
 - Role and Permission: tạo/sửa role tự định nghĩa, quyền theo module, gán nhiều role cho user tạo bằng email hoặc điện thoại, phân công nhà máy, tạm khóa user. Quyền kết hợp theo role; thao tác cần quyền Xem trước. Role hệ thống và quản trị gốc chỉ đọc để tránh tự khóa.
-- Dropdown tài khoản trên header là **xem thử quyền** sau cổng cmc-test, không phải đăng nhập thật bằng email/SĐT. Không gửi email, SMS hay tạo mật khẩu. Chỉ dùng dữ liệu hư cấu; cần backend xác thực và kiểm tra quyền máy chủ trước vận hành thật.
+- Dropdown tài khoản trên header là **xem thử quyền** sau cổng cmc-test 01, không phải đăng nhập thật bằng email/SĐT. Không gửi email, SMS hay tạo mật khẩu. Chỉ dùng dữ liệu hư cấu; cần backend xác thực và kiểm tra quyền máy chủ trước vận hành thật.
 - Activity Log ghi thay đổi bản ghi, thao tác import/xuất, mở chức năng/chi tiết, đăng nhập/đăng xuất và đọc thông báo từ khi bật chức năng. Không truy dựng hoạt động quá khứ; không lưu nội dung ảnh, mật khẩu hoặc giá trị email/điện thoại vào nội dung thay đổi. Lưu local, không bảo đảm chống sửa/xóa bằng devtools và không tổng hợp giữa thiết bị.
 - Chuông lọc theo người nhận hoặc role và nhà máy, số chưa đọc và đánh dấu đã đọc riêng từng user. Bao gồm thông báo cổng và kết quả import. Không push notification nền hoặc đồng bộ thiết bị.
 - Không push/deploy trong đợt thay đổi này.
