@@ -1,6 +1,6 @@
-import {translateText,number,locale,localize,freeTextHTML,historyHTML} from './i18n.js?v=25';
-import {storeEvidence,downloadEvidence} from './export-files.js?v=25';
-import {actionAllowed,exportCommand,visible,stockPosition,orderTotal,paymentStatus,piStatus,lotFree,DOC_TYPES} from './export-domain.js?v=25';
+import {translateText,number,locale,localize,freeTextHTML,historyHTML} from './i18n.js?v=26';
+import {storeEvidence,downloadEvidence} from './export-files.js?v=26';
+import {actionAllowed,exportCommand,visible,stockPosition,orderTotal,paymentStatus,piStatus,lotFree,DOC_TYPES} from './export-domain.js?v=26';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=v=>number(v,{maximumFractionDigits:3}),fmtDate=v=>v?new Date(v).toLocaleString(locale()):'—';
 let E,search='',filter='all',from='',to='',productionSearch='',productionStatus='all',shipmentSearch='';

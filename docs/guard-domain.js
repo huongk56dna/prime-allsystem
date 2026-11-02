@@ -1,4 +1,4 @@
-import {PLANTS} from './access.js?v=25';
+import {PLANTS} from './access.js?v=26';
 // Default factory for the gate fixtures. The gate itself works on the signed-in user's factory.
 export const GUARD_PLANT='Prime Tiền Phong';
 export const stationNames=['Cổng vào','Sales Admin','Thủ kho','Xe nâng','Cổng ra','Đã ra cổng'];

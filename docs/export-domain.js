@@ -1,5 +1,5 @@
-import {customerPlant,normalizePlant} from './access.js?v=25';
-import {availableArea} from './order-flow.js?v=25';
+import {customerPlant,normalizePlant} from './access.js?v=26';
+import {availableArea} from './order-flow.js?v=26';
 export const FACTORY_ROLES=['Kế hoạch sản xuất','Logistics/Xuất nhập khẩu'];
 export const DOC_TYPES=['INV','PL','SI','VGM','B/L nháp','Hải quan','C/O'];
 const die=m=>{throw Error(m)},require=(v,m)=>{if(!v)die(m)},id=()=>crypto.randomUUID();
