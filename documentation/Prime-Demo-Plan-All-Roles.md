@@ -28,7 +28,7 @@ Không coi việc khách xác nhận thỏa thuận là đã nhận tiền. Khô
 | File xuất | Cho phép trình duyệt tải Excel; chuẩn bị chức năng In / Lưu PDF | Kiểm tra nội dung file, không chỉ toast |
 | Dữ liệu đã chạy | Xem trạng thái hiện tại trước khi bắt đầu | Bước đã xong thì dùng mã mới, không reset toàn bộ dữ liệu |
 
-Dữ liệu PI-0007/SHP-0001 đã có ví dụ hai SKU, xếp hàng, INV/PL/SI/VGM và B/L đối chiếu đạt. SX-0001 có ví dụ nguyên liệu thiếu, phản hồi mua và lịch đã duyệt. Dùng các mã này để giới thiệu nhanh; tạo mã mới nếu muốn thao tác lại từ đầu.
+Lưu ý: PI-0007, SHP-0001 và SX-0001 không có trong dữ liệu khởi tạo; chúng chỉ có trên trình duyệt đã chạy demo trước đó. Trên trình duyệt mới, tạo lại từ PI-POC-001 theo các bước bên dưới. Dữ liệu PI-0007/SHP-0001 (nếu có) đã có ví dụ hai SKU, xếp hàng, INV/PL/SI/VGM và B/L đối chiếu đạt. SX-0001 có ví dụ nguyên liệu thiếu, phản hồi mua và lịch đã duyệt. Dùng các mã này để giới thiệu nhanh; tạo mã mới nếu muốn thao tác lại từ đầu.
 
 Lưu ý ngày: không ghi hoàn tất sản xuất/QC ở tương lai. Với demo live toàn chuỗi trong ngày, chuẩn bị PI và lịch hợp lệ có ngày hoàn thành không vượt ngày hiện tại; nếu lịch đang ở tương lai, dừng ở duyệt lịch và dùng tình huống QC khác đã đến hạn. Không sửa đồng hồ máy để vượt kiểm tra.
 

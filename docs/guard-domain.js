@@ -1,9 +1,11 @@
+import {PLANTS} from './access.js?v=24';
+// Default factory for the gate fixtures. The gate itself works on the signed-in user's factory.
 export const GUARD_PLANT='Prime Tiền Phong';
 export const stationNames=['Cổng vào','Sales Admin','Thủ kho','Xe nâng','Cổng ra','Đã ra cổng'];
 const fail=t=>{throw Error(t)};
 const log=(t,action,ctx)=>t.history.push({at:ctx.now,actor:ctx.actor,action});
 export function guardCommand(source,action,p,ctx){
- const s=structuredClone(source),day=ctx.now.slice(0,10);if(ctx.plant!==GUARD_PLANT||ctx.role!=='Bảo vệ')fail('Không có quyền xử lý cổng.');
+ const s=structuredClone(source),day=ctx.now.slice(0,10);if(!PLANTS.includes(ctx.plant))fail('Chọn một nhà máy để xử lý cổng.');if(!(ctx.rights||[]).includes(action==='entry'?'create':'update'))fail('Không có quyền xử lý cổng.');
  const notify=(roles,text)=>s.guardNotifications.unshift({id:crypto.randomUUID(),roles,text,at:ctx.now,plantId:ctx.plant});
  let t;
  if(action==='entry'){

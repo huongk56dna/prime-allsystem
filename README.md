@@ -14,7 +14,7 @@ Standalone review project for three experiences: Business Web, Customer App, Sal
 
 Only publish this project's own manifest/project ID; never deploy it to X-Booster.
 
-Preview: python3 -m http.server 5184 --directory dist
+Preview: python3 -m http.server 5184 --directory docs
 
 ## GitHub Pages
 Serve from the `docs/` folder on the default branch in repository Settings → Pages. All asset paths are relative, including the ES modules. No build or OpenAI API key is required.
@@ -80,3 +80,11 @@ Image upload/drop supports JPG/PNG up to 5 MB as a reference preview. It does no
 ## Ngôn ngữ VN / EN / TH
 
 Bộ chọn nằm cạnh chuông thông báo và có trên màn đăng nhập. Lựa chọn lưu bằng `prime-language-v1`, dùng chung cho Web, Customer App, Sales App và App Bảo vệ. Catalog cục bộ dùng bản dịch cố định; không gọi dịch vụ dịch bên ngoài. Nhãn, trạng thái, cảnh báo, quyền, mẫu in và tiêu đề Excel/CSV theo ngôn ngữ đang chọn. Tên riêng, mã SKU/PI, giá trị option, tệp và nội dung tự nhập được giữ nguyên. Đổi ngôn ngữ không render lại form đang nhập. Các mẫu import chấp nhận nhãn và trạng thái chất lượng VN/EN/TH nhưng lưu giá trị nghiệp vụ chuẩn. Điều khiển lịch, hộp thoại chọn tệp hoặc in thuộc trình duyệt/hệ điều hành có thể theo ngôn ngữ thiết bị.
+
+## Sales App và App Bảo vệ dùng chung luồng với Web
+- Sales App và App Bảo vệ dùng cùng tài khoản, role, quyền theo module và nhà máy được phân công như Web quản trị. Chỉ khác role: role **Sales** mở Sales App (kèm Xem/Tạo đơn hàng và Xem thị trường trên Web), role **Bảo vệ** mở App Bảo vệ. CEO và Quản trị hệ thống giữ toàn quyền.
+- App Bảo vệ không còn cố định Prime Tiền Phong: xe, đơn chờ vào, thông báo và lịch sử lấy theo nhà máy của người dùng. Người thao tác ghi vào lịch sử là tài khoản đang dùng. Xác nhận xe vào cần quyền Tạo, kiểm tra xe ra cần quyền Sửa.
+- Sales App lọc khách hàng, chuyến thăm, khảo sát, sell-out và thông báo cổng theo nhà máy; khảo sát ghi tên người dùng hiện tại. Lưu khảo sát / sell-out / lịch thăm cho khách ngoài nhà máy bị chặn.
+- Tài khoản xem thử mới: Sales Minh An (Tiền Phong), Bảo vệ Tiền Phong, Bảo vệ Đại Việt. Với CMC Test, hai app hiện role cố định và cho chọn nhà máy để xem thử.
+- Dữ liệu đã lưu được nâng cấp một lần (`fieldAppsV1`): thêm role Sales, gỡ quyền Sales App / App Bảo vệ khỏi các role hệ thống khác. Role tự định nghĩa không bị đổi.
+- Vẫn là kiểm soát phía trình duyệt, không phải RBAC máy chủ.

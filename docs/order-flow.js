@@ -4,9 +4,11 @@ export function convertPieces(product,pieces){
  const count=Number(pieces),area=Math.round(count*product.area*1e6)/1e6;
  return {valid:true,pieces:count,boxes:Math.floor(count/product.pack),loose:count%product.pack,area,amount:Math.round(area*product.price)};
 }
+// Stock is held from Commercial Director approval until delivery. Orders still waiting for approval only flag shortages.
+export const RESERVING_STATUSES=['Đã duyệt','Đã xác nhận','Đang lấy hàng','Đang giao'];
 export function availableArea(productId,lots,orders,plant,exportReservations=[]){
  const stock=lots.filter(l=>l.product===productId&&l.plant===plant&&l.quality==='Đạt chất lượng').reduce((sum,l)=>sum+Number(l.qty),0);
- const reserved=orders.filter(o=>['Đã xác nhận','Đang giao','Đang lấy hàng'].includes(o.status)&&(o.plantId===plant||!o.plantId)).reduce((sum,o)=>sum+(o.lines||[]).filter(l=>l.product===productId).reduce((s,l)=>s+Math.max(0,Number(l.area??l.qty??0)-Number(l.deliveredArea||0)),0),0);
+ const reserved=orders.filter(o=>RESERVING_STATUSES.includes(o.status)&&(o.plantId===plant||!o.plantId)).reduce((sum,o)=>sum+(o.lines||[]).filter(l=>l.product===productId).reduce((s,l)=>s+Math.max(0,Number(l.area??l.qty??0)-Number(l.deliveredArea||0)),0),0);
  const held=exportReservations.filter(r=>r.product===productId&&r.plant===plant).reduce((v,r)=>v+Number(r.area),0);
  return Math.max(0,Math.round((stock-reserved-held)*1e6)/1e6);
 }

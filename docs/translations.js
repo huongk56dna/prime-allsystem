@@ -1,6 +1,41 @@
 // Vietnamese, English and Thai UI catalog. Business values remain unchanged.
 export const translations=[
  [
+  "Đơn không còn ở bước chờ duyệt.",
+  "This order is no longer awaiting approval.",
+  "คำสั่งซื้อนี้ไม่ได้อยู่ในขั้นตอนรออนุมัติแล้ว"
+ ],
+ [
+  "Phương án đã được duyệt.",
+  "This plan is already approved.",
+  "แผนนี้ได้รับการอนุมัติแล้ว"
+ ],
+ [
+  "Không có đơn chờ xác nhận thỏa thuận.",
+  "No orders are waiting for agreement confirmation.",
+  "ไม่มีคำสั่งซื้อที่รอยืนยันข้อตกลง"
+ ],
+ [
+  "Phiếu điều chuyển là bản demo, chưa thay đổi tồn kho.",
+  "The transfer slip is a demo and does not change stock.",
+  "ใบโอนย้ายเป็นเพียงตัวอย่าง ยังไม่เปลี่ยนแปลงสต็อก"
+ ],
+ [
+  "Giao dịch đã được đối chiếu.",
+  "This transaction is already reconciled.",
+  "รายการนี้กระทบยอดแล้ว"
+ ],
+ [
+  "Nhập tham chiếu và số tiền lớn hơn 0.",
+  "Enter a reference and an amount greater than 0.",
+  "กรอกเลขอ้างอิงและจำนวนเงินที่มากกว่า 0"
+ ],
+ [
+  "Tham chiếu đã tồn tại.",
+  "This reference already exists.",
+  "เลขอ้างอิงนี้มีอยู่แล้ว"
+ ],
+ [
   "Ngôn ngữ",
   "Language",
   "ภาษา"
@@ -6939,6 +6974,11 @@ export const translations=[
   "manage",
   "Manage",
   "จัดการ"
+ ],
+ [
+  "Chọn một nhà máy để xử lý cổng.",
+  "Select one factory to process gate operations.",
+  "เลือกโรงงานหนึ่งแห่งเพื่อดำเนินงานประตู"
  ],
  ["Điều hành xuất khẩu","Export Control","ควบคุมการส่งออก"],
  ["Điều hành đơn xuất khẩu","Export Order Control","ควบคุมคำสั่งซื้อส่งออก"],
