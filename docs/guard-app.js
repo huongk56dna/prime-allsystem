@@ -1,6 +1,6 @@
-import {translateText,locale,freeTextHTML,historyHTML} from './i18n.js?v=22';
-import {GUARD_PLANT,stationNames,guardCommand} from './guard-domain.js?v=22';
-import {saveGuardPhoto,guardPhotoURL} from './guard-storage.js?v=22';
+import {translateText,locale,freeTextHTML,historyHTML} from './i18n.js?v=24';
+import {GUARD_PLANT,stationNames,guardCommand} from './guard-domain.js?v=24';
+import {saveGuardPhoto,guardPhotoURL} from './guard-storage.js?v=24';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const stamp=v=>v?new Date(v).toLocaleString(locale()):'';
 let selectedOrder='',selectedExit='',query='',status='all';
