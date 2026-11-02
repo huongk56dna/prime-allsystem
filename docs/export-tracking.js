@@ -1,9 +1,9 @@
-import { number, locale, protectText, freeTextHTML } from './i18n.js?v=24';
+import { number, locale, protectText, freeTextHTML } from './i18n.js?v=26';
 import {
   STAGES, STAGE_LABEL, CUSTOMERS, CUSTOMER_APP_ACCOUNT, SLA_HOURS, REQUEST_SLA_HOURS, trackingData, forCustomer, forPlant,
   orderQty, producedPct, shippedPct, isLate, lateDays, customerOverview, upcomingEvents, exceptions, exceptionCounts,
   pipeline, dataQuality, pushLog, hoursSince,
-} from './export-tracking-domain.js?v=24';
+} from './export-tracking-domain.js?v=26';
 
 // Customer App (#customer/export) and Sales App / Web (#sales/export, #web/tracking) views of export orders.
 let C;

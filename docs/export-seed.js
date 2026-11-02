@@ -1,4 +1,4 @@
-import {initExport,exportCommand} from './export-domain.js?v=24';
+import {initExport,exportCommand} from './export-domain.js?v=26';
 export function seedExport(s,products,plants){initExport(s);{const r=s.roles.find(r=>r.name==='Kế toán trưởng');if(r&&!s.users.some(u=>u.id==='export-poc-accounting'))s.users.push({id:'export-poc-accounting',name:'Kế toán xuất khẩu · Tiền Phong',email:'export.accounting@example.com',phone:'',roles:[r.id],plant:plants[0],status:'active'});s.exportIdentityV1=true;}if(s.exportV1)return;s.exportV1=true;
 for(const r of s.roles.filter(r=>r.system&&r.name==='Giám đốc nhà máy'))r.permissions.plans=[...new Set([...(r.permissions.plans||[]),'view','approve'])];
  // Keep old PI fixtures without inventing their financial verification or approvals.
