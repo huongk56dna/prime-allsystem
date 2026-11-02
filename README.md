@@ -14,7 +14,7 @@ Standalone review project for three experiences: Business Web, Customer App, Sal
 
 Only publish this project's own manifest/project ID; never deploy it to X-Booster.
 
-Preview: python3 -m http.server 5184 --directory dist
+Preview: python3 -m http.server 5184 --directory docs
 
 ## GitHub Pages
 Serve from the `docs/` folder on the default branch in repository Settings → Pages. All asset paths are relative, including the ES modules. No build or OpenAI API key is required.
