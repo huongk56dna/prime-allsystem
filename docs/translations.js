@@ -6939,5 +6939,10 @@ export const translations=[
   "manage",
   "Manage",
   "จัดการ"
+ ],
+ [
+  "Chọn một nhà máy để xử lý cổng.",
+  "Select one factory to process gate operations.",
+  "เลือกโรงงานหนึ่งแห่งเพื่อดำเนินงานประตู"
  ]
 ];

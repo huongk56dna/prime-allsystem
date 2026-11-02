@@ -8,6 +8,7 @@ export const ROLES=[
  {name:'Logistics/Xuất nhập khẩu',group:'Theo nhà máy',plant:'Prime Tiền Phong'},
  {name:'Xe nâng',group:'Theo nhà máy',plant:'Prime Tiền Phong'},
  {name:'Bảo vệ',group:'Theo nhà máy',plant:'Prime Tiền Phong'},
+ {name:'Sales',group:'Theo nhà máy',plant:'Prime Tiền Phong'},
  {name:'Giám đốc Thương mại',group:'Toàn hệ thống',all:true},
  {name:'Phòng Mua hàng',group:'Toàn hệ thống',all:true},
  {name:'CFO',group:'Toàn hệ thống',all:true},
