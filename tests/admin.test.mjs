@@ -27,3 +27,14 @@ test('field app migration upgrades stored roles once and keeps custom data',()=>
  assert.deepEqual(s.roles.find(r=>r.id===custom.id).permissions.guard,['view','update']);
  assert.equal(s.users.filter(u=>u.id==='user-bv-dv').length,1);seedFieldApps(s);assert.equal(s.users.filter(u=>u.id==='user-bv-dv').length,1);
 });
+test('a user manager cannot grant rights or scope they do not hold, nor change their own roles',()=>{
+ const s=base();
+ const mgrRole=saveRole(s,{name:'Quản lý user nhà máy',scope:'plant',permissions:{roles:['view','manage'],stock:['view']}},'cmc-test');
+ const mgr=saveUser(s,{name:'Mai',email:'mai@example.com',phone:'',roles:[mgrRole.id],plant:PLANTS[0],status:'active'},'cmc-test',PLANTS);
+ assert.throws(()=>saveUser(s,{name:'Lan',email:'lan@example.com',phone:'',roles:['system-admin'],plant:PLANTS[0],status:'active'},mgr.id,PLANTS),/không có/);
+ assert.throws(()=>saveUser(s,{...mgr,roles:[mgrRole.id,'system-admin']},mgr.id,PLANTS),/chính mình/);
+ assert.throws(()=>saveRole(s,{name:'Kho sửa',scope:'plant',permissions:{stock:['view','update']}},mgr.id),/không có/);
+ assert.throws(()=>saveRole(s,{name:'Kho toàn hệ thống',scope:'all',permissions:{stock:['view']}},mgr.id),/không có/);
+ const ok=saveUser(s,{name:'Lan',email:'lan@example.com',phone:'',roles:[mgrRole.id],plant:PLANTS[0],status:'active'},mgr.id,PLANTS);assert.ok(ok.id);
+});
+test('activity diff logs deleted records',()=>{const logs=diffActivity({orders:[{id:'A'},{id:'B'}]},{orders:[{id:'A'}]},'x','all','web/orders');assert.equal(logs.length,1);assert.equal(logs[0].action,'Xóa');assert.equal(logs[0].record,'B');});

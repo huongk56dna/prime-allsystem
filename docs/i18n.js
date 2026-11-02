@@ -1,4 +1,4 @@
-import {translations} from './translations.js?v=23';
+import {translations} from './translations.js?v=25';
 
 const KEY='prime-language-v1';
 export const LANGUAGES={vi:'VN · Tiếng Việt',en:'EN · English',th:'TH · ไทย'};

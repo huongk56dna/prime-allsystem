@@ -1,6 +1,6 @@
-import {translateText,locale,historyHTML} from './i18n.js?v=23';
-import {MODULES,RIGHTS,saveRole,saveUser,notificationsFor} from './admin-domain.js?v=23';
-import {IMPORT_FIELDS,validateStockRows,parseCSV} from './stock-import.js?v=23';
+import {translateText,locale,historyHTML} from './i18n.js?v=25';
+import {MODULES,RIGHTS,saveRole,saveUser,notificationsFor} from './admin-domain.js?v=25';
+import {IMPORT_FIELDS,validateStockRows,parseCSV} from './stock-import.js?v=25';
 const e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const b=(t,a,primary=false)=>`<button type="button" class="${primary?'primary':''}" data-admin="${a}">${t}</button>`;
 const opts=(values,selected)=>values.map(([id,t])=>`<option value="${e(id)}" ${id===selected?'selected':''}>${e(t)}</option>`).join('');

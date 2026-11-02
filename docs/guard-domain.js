@@ -1,4 +1,4 @@
-import {PLANTS} from './access.js?v=23';
+import {PLANTS} from './access.js?v=25';
 // Default factory for the gate fixtures. The gate itself works on the signed-in user's factory.
 export const GUARD_PLANT='Prime Tiền Phong';
 export const stationNames=['Cổng vào','Sales Admin','Thủ kho','Xe nâng','Cổng ra','Đã ra cổng'];
@@ -44,4 +44,28 @@ export function guardCommand(source,action,p,ctx){
 }
 export function seedGuard(s){if(s.guardV1)return;s.guardV1=true;s.guardTrucks=[];s.guardNotifications=[];const today=new Date().toISOString().slice(0,10),at=today+'T08:00:00.000Z';
  for(let i=1;i<=5;i++){const o={id:'BV-DH-'+String(i).padStart(3,'0'),customer:'NPP-001',plantId:GUARD_PLANT,date:today,status:i<3?'Đã xác nhận':'Đang lấy hàng',guardApproved:true,lines:[{product:'PR-60120-01',pieces:200,area:.72,delivered:0},{product:'PR-6060-05',pieces:120,area:.36,delivered:0}],history:['Giám đốc Thương mại duyệt','Khách xác nhận thỏa thuận trả trước']};s.orders.push(o);if(i>=3)s.guardTrucks.push({id:'BV-XE-'+i,seq:i-2,queue:`XE-${today.replaceAll('-','')}-${String(i-2).padStart(3,'0')}`,plantId:GUARD_PLANT,order:o.id,customer:o.customer,plate:['','','','29C12345','88C45678','30H78901'][i],driver:'Nguyễn Văn '+i,equipment:'Không có',station:i===3?1:4,entered:at,lines:structuredClone(o.lines),loadingConfirmed:i>3,financeClear:i>3,hold:i===5,holdReason:i===5?'Chênh lệch thiết bị tại cổng ra':'',history:[{at,actor:'Bảo vệ Tiền Phong',action:'Xác nhận xe vào'}]});}
+}
+// Department stations between gate entry and gate exit. Each station is done by its own role
+// (or a user with Quản trị on that module) with Sửa rights on the module, scoped to the truck's factory.
+export const STATION_STEPS={
+ 1:{role:'Sales Admin',module:'orders',action:'Xác nhận đủ điều kiện xuất',done:'Sales Admin xác nhận đủ điều kiện xuất cổng',next:['Kho']},
+ 2:{role:'Kho',module:'stock',action:'Xuất phiếu lấy hàng',done:'Thủ kho xuất phiếu lấy hàng',next:['Xe nâng']},
+ 3:{role:'Xe nâng',module:'stock',action:'Xác nhận đã xếp hàng',done:'Xe nâng xác nhận đã xếp đủ hàng',next:['Bảo vệ']}
+};
+// ctx: {plant, actor, now, roles:[role names], can:(module,right)=>bool}
+export function canDoStation(truck,ctx){const step=STATION_STEPS[truck?.station];return !!step&&!truck.hold&&(ctx.plant==='all'||truck.plantId===ctx.plant)&&ctx.can(step.module,'update')&&((ctx.roles||[]).includes(step.role)||ctx.can(step.module,'manage'));}
+export function stationCommand(source,p,ctx){
+ const s=structuredClone(source),t=s.guardTrucks.find(t=>t.id===p.id&&(ctx.plant==='all'||t.plantId===ctx.plant));
+ if(!t)fail('Không tìm thấy xe tại nhà máy này.');
+ if(t.station!==Number(p.station))fail('Xe đã chuyển sang trạm khác. Vui lòng tải lại.');
+ const step=STATION_STEPS[t.station];if(!step)fail('Xe không ở trạm của bộ phận.');
+ if(t.hold)fail('Xe đang bị giữ, cần xử lý chênh lệch trước.');
+ if(!canDoStation(t,ctx))fail(`Chỉ ${step.role} có quyền Sửa mới xử lý được trạm này.`);
+ const o=s.orders.find(o=>o.id===t.order);if(!o||o.status!=='Đang lấy hàng')fail('Đơn hàng không còn ở bước lấy hàng.');
+ if(t.station===1)t.financeClear=true;
+ if(t.station===2)t.pickingIssued=ctx.now;
+ if(t.station===3)t.loadingConfirmed=true;
+ t.station+=1;log(t,step.done,ctx);
+ s.guardNotifications.unshift({id:crypto.randomUUID(),roles:step.next,text:`${t.queue} · ${t.plate} · ${step.done}`,at:ctx.now,plantId:t.plantId});
+ return {state:s,truck:t};
 }

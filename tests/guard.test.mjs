@@ -19,3 +19,24 @@ test('gate follows the signed-in user permissions and factory, not a fixed plant
  assert.equal(r.truck.plantId,dv);assert.equal(r.truck.history[0].actor,'Bảo vệ Đại Việt');assert.equal(r.state.guardNotifications[0].plantId,dv);
  assert.throws(()=>guardCommand(r.state,'start',{id:'BV-XE-4'},dvCtx));
 });
+import {stationCommand,canDoStation,STATION_STEPS} from '../docs/guard-domain.js';
+const dept=(roles,rights={orders:['view','update'],stock:['view','update']})=>({plant:GUARD_PLANT,actor:roles[0],roles,now:new Date().toISOString(),can:(m,r)=>(rights[m]||[]).includes(r)});
+test('a truck entered at the gate passes Sales Admin, Warehouse and Forklift, then exits',()=>{
+ let r=guardCommand(base(),'entry',entry,ctx);const id=r.truck.id;let s=r.state;
+ for(const role of ['Sales Admin','Kho','Xe nâng']){const st=s.guardTrucks.find(t=>t.id===id).station;r=stationCommand(s,{id,station:st},dept([role]));s=r.state;assert.equal(r.truck.station,st+1);assert.ok(s.guardNotifications[0].roles.includes(STATION_STEPS[st].next[0]));}
+ const t=s.guardTrucks.find(t=>t.id===id);assert.equal(t.station,4);assert.ok(t.financeClear&&t.loadingConfirmed);
+ s=guardCommand(s,'start',{id},ctx).state;
+ r=guardCommand(s,'exit',{id,photo:{id:'c',hash:'c'},checked:true,equipment:'Không có',quantities:[20,12],resolution:''},ctx);
+ assert.equal(r.truck.station,5);assert.equal(r.state.orders.find(o=>o.id==='BV-DH-001').status,'Đã xác nhận');
+});
+test('station steps check role, rights, factory, hold and stale station',()=>{
+ const s=base(),id='BV-XE-3';
+ assert.throws(()=>stationCommand(s,{id,station:1},dept(['Kho'])),/Sales Admin/);
+ assert.throws(()=>stationCommand(s,{id,station:1},dept(['Bảo vệ'],{guard:['view','update']})));
+ assert.throws(()=>stationCommand(s,{id,station:1},dept(['Sales Admin'],{orders:['view']})));
+ assert.throws(()=>stationCommand(s,{id,station:1},{...dept(['Sales Admin']),plant:'Prime Đại Việt'}));
+ assert.throws(()=>stationCommand(s,{id,station:2},dept(['Sales Admin'])),/tải lại/);
+ assert.ok(canDoStation(s.guardTrucks.find(t=>t.id===id),dept(['CEO'],{orders:['view','update','manage']})));
+ const held=structuredClone(s);held.guardTrucks.find(t=>t.id===id).hold=true;assert.throws(()=>stationCommand(held,{id,station:1},dept(['Sales Admin'])));
+ assert.throws(()=>stationCommand(s,{id:'BV-XE-4',station:4},dept(['Xe nâng'])));
+});
