@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {seedGuard,guardCommand,GUARD_PLANT} from '../docs/guard-domain.js';
-const ctx={role:'Bảo vệ',plant:GUARD_PLANT,actor:'Bảo vệ',now:new Date().toISOString()};
+const ctx={role:'Bảo vệ',plant:GUARD_PLANT,actor:'Bảo vệ',rights:['view','create','update'],now:new Date().toISOString()};
 const base=()=>{const s={orders:[]};seedGuard(s);return s;};
 const entry={order:'BV-DH-001',plate:'29C-123.46',equipment:'Không có',driver:'An',quantities:[20,12],platePhoto:{id:'a',hash:'a'},conditionPhoto:{id:'b',hash:'b'}};
 test('entry creates sequence and Sales notification without modifying original',()=>{const s=base(),r=guardCommand(s,'entry',entry,ctx);assert.equal(r.truck.station,1);assert.equal(r.truck.seq,4);assert.equal(s.guardTrucks.length,3);assert.ok(r.state.guardNotifications[0].roles.includes('Sales'));assert.equal(r.state.orders[0].status,'Đang lấy hàng');});
@@ -7,3 +7,15 @@ test('entry rejects duplicate plate/order, invalid photos, quantities, unauthori
 test('guard cannot advance a department stage',()=>{assert.throws(()=>guardCommand(base(),'start',{id:'BV-XE-3'},ctx));assert.throws(()=>guardCommand(base(),'load',{id:'BV-XE-4'},ctx));});
 test('exit mismatch holds and notifies warehouse, corrected counts require resolution',()=>{let s=guardCommand(base(),'start',{id:'BV-XE-4'},ctx).state;const payload={id:'BV-XE-4',photo:{id:'c',hash:'c'},checked:true,equipment:'Không có',quantities:[199,120],resolution:''};let r=guardCommand(s,'exit',payload,ctx);assert.equal(r.truck.hold,true);assert.ok(r.state.guardNotifications[0].roles.includes('Thủ kho'));assert.throws(()=>guardCommand(r.state,'exit',{...payload,quantities:[200,120]},ctx));r=guardCommand(r.state,'exit',{...payload,quantities:[200,120],resolution:'Đã kiểm đếm lại đủ hàng'},ctx);assert.equal(r.truck.station,5);assert.equal(r.state.orders.find(o=>o.id==='BV-DH-004').status,'Đã giao');assert.equal(r.state.guardInvoiceRequests.length,1);assert.ok(r.state.guardNotifications[0].roles.includes('Kế toán'));assert.throws(()=>guardCommand(r.state,'exit',payload,ctx));});
 test('financial clearance is required at exit and partial delivery preserves remainder',()=>{let s=guardCommand(base(),'start',{id:'BV-XE-4'},ctx).state;let t=s.guardTrucks.find(t=>t.id==='BV-XE-4');t.financeClear=false;const p={id:t.id,photo:{id:'c',hash:'c'},checked:true,equipment:'Không có',quantities:[200,120],resolution:''};assert.throws(()=>guardCommand(s,'exit',p,ctx));t.financeClear=true;t.lines[0].pieces=100;p.quantities=[100,120];const r=guardCommand(s,'exit',p,ctx);assert.equal(r.state.orders.find(o=>o.id==='BV-DH-004').status,'Đã xác nhận');});
+test('gate follows the signed-in user permissions and factory, not a fixed plant',()=>{
+ const s=base();
+ assert.throws(()=>guardCommand(s,'entry',entry,{...ctx,rights:['view']}),/quyền/);
+ assert.throws(()=>guardCommand(s,'start',{id:'BV-XE-4'},{...ctx,rights:['view','create']}),/quyền/);
+ assert.throws(()=>guardCommand(s,'entry',entry,{...ctx,plant:'all'}));
+ const dv='Prime Đại Việt';s.orders.push({id:'DV-DH-001',customer:'NPP-002',plantId:dv,date:ctx.now.slice(0,10),status:'Đã xác nhận',guardApproved:true,lines:[{product:'PR-6060-02',pieces:50,delivered:0}],history:[]});
+ const dvCtx={...ctx,plant:dv,actor:'Bảo vệ Đại Việt'};
+ assert.throws(()=>guardCommand(s,'entry',entry,dvCtx));
+ const r=guardCommand(s,'entry',{...entry,order:'DV-DH-001',plate:'30A11111',quantities:[50]},dvCtx);
+ assert.equal(r.truck.plantId,dv);assert.equal(r.truck.history[0].actor,'Bảo vệ Đại Việt');assert.equal(r.state.guardNotifications[0].plantId,dv);
+ assert.throws(()=>guardCommand(r.state,'start',{id:'BV-XE-4'},dvCtx));
+});

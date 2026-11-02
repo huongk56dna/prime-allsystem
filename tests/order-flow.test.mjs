@@ -26,3 +26,8 @@ test('availability excludes held quality and stock reserved at the same plant',(
  assert.equal(availableArea(id,lots,orders,plant),1640-150);
  assert.equal(availableArea(id,lots,orders,'Prime Ngói Việt'),0);
 });
+test('approved orders reserve stock; orders waiting for approval do not',()=>{
+ const id=products[0].id,plant='Prime Tiền Phong';
+ const orders=[{plantId:plant,status:'Đã duyệt',lines:[{product:id,area:100}]},{plantId:plant,status:'Chờ duyệt',lines:[{product:id,area:300}]}];
+ assert.equal(availableArea(id,lots,orders,plant),1640-100);
+});
