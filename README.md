@@ -9,7 +9,7 @@ Standalone review project for three experiences: Business Web, Customer App, Sal
 - Uploaded images stay as in-memory blob URLs and are never uploaded. Drafts exclude images.
 - Review feedback can be exported as JSON. No automatic sending or collaboration sync.
 - Chart projections are illustrative scenarios, not AI forecasts or production recommendations.
-- App / role switchers are UI demonstrations, not real RBAC. Access is enforced by the private Sites audience.
+- App / role switchers are UI demonstrations, not real RBAC. The repository is public and the login is a browser-only check, so nothing here is access-controlled. Keep all data fictional.
 - No bank transfers, live AI, ERP, customs, actual order processing or notifications are connected.
 
 Only publish this project's own manifest/project ID; never deploy it to X-Booster.
@@ -21,7 +21,7 @@ Serve from the `docs/` folder on the default branch in repository Settings → P
 
 The Sites audience setting does not transfer to GitHub Pages. Only the test UI gate applies there; it is not real access control.
 
-## Factory scopes and module filters (local changes, not pushed)
+## Factory scopes and module filters
 
 Factory list: Prime Tiền Phong, Prime Đại Việt, Prime Vĩnh Phúc, Prime Ngói Việt.
 
@@ -88,3 +88,26 @@ Bộ chọn nằm cạnh chuông thông báo và có trên màn đăng nhập. L
 - Tài khoản xem thử mới: Sales Minh An (Tiền Phong), Bảo vệ Tiền Phong, Bảo vệ Đại Việt. Với CMC Test, hai app hiện role cố định và cho chọn nhà máy để xem thử.
 - Dữ liệu đã lưu được nâng cấp một lần (`fieldAppsV1`): thêm role Sales, gỡ quyền Sales App / App Bảo vệ khỏi các role hệ thống khác. Role tự định nghĩa không bị đổi.
 - Vẫn là kiểm soát phía trình duyệt, không phải RBAC máy chủ.
+
+## Gate stations
+
+A truck entered at the gate moves through four stations before it can leave:
+
+1. **Sales Admin** confirms the order is cleared to ship (sets `financeClear`).
+2. **Kho** (warehouse) issues the picking slip.
+3. **Xe nâng** (forklift) confirms the goods are loaded (sets `loadingConfirmed`).
+4. **Bảo vệ** runs the exit check in App Bảo vệ.
+
+Stations 1–3 are handled on the Web, in Kho thành phẩm → "Xe đang lấy hàng tại nhà máy". A station needs Sửa rights on its module (Đơn hàng for Sales Admin, Kho thành phẩm for Kho and Xe nâng) and that station's role, or Quản trị on the module. Each step notifies the next role. Logic and tests: `stationCommand` in `docs/guard-domain.js`, `tests/guard.test.mjs`.
+
+## Several tabs
+
+All tabs share one localStorage record. A tab picks up another tab's save when it gets focus or receives the browser's `storage` event. A save from a tab that has not seen a newer save is refused, the tab reloads the newer data, and the user is asked to repeat the action. Nothing is silently overwritten.
+
+## Cache busting
+
+Every module import carries the same `?v=NN`. When a JS or CSS file changes, bump it everywhere: `sed -i 's/?v=OLD/?v=NEW/g' docs/*.js docs/index.html`. `tests/version.test.mjs` fails if the versions differ.
+
+## CI
+
+`.github/workflows/test.yml` runs `node --test tests/*.test.mjs` on every push and pull request.

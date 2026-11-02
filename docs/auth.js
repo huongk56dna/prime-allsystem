@@ -1,4 +1,4 @@
-import {languagePicker,startLocalization,translateText} from './i18n.js?v=23';
+import {languagePicker,startLocalization,translateText} from './i18n.js?v=25';
 startLocalization();
 // Test-only browser gate. Not a server authentication boundary.
 const KEY='prime-review-test-session-v1';
@@ -11,6 +11,6 @@ document.getElementById('show-password').onclick=()=>{const input=form.elements.
 form.onsubmit=async e=>{e.preventDefault();error.textContent='';const submit=form.querySelector('[type=submit]');submit.disabled=true;try{const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(form.elements.password.value));const hash=Array.from(new Uint8Array(digest),v=>v.toString(16).padStart(2,'0')).join('');if(form.elements.username.value.trim()!=='cmc-test 01'||hash!==HASH){error.textContent='Tên đăng nhập hoặc mật khẩu chưa đúng.';return}sessionStorage.setItem(KEY,JSON.stringify({user:'cmc-test 01',expires:Date.now()+duration}));location.reload()}catch{error.textContent='Không thể đăng nhập. Hãy mở bằng HTTPS hoặc localhost và cho phép lưu phiên.'}finally{submit.disabled=false}};
 }
 if(valid()){
-await import('./app.js?v=23');
+await import('./app.js?v=25');
 const logout=document.createElement('button');logout.textContent='Đăng xuất';logout.className='test-logout';logout.setAttribute('aria-label','Đăng xuất Prime');document.body.append(logout);logout.onclick=()=>{sessionStorage.removeItem(KEY);location.reload()};setInterval(()=>{if(!valid())location.reload()},60000);
 }else loginPage();
